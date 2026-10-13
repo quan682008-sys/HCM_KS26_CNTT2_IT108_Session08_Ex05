@@ -1,0 +1,37 @@
+﻿1. Thiết kế kiến trúc
+* Header: Tên script, tác giả, ngày tạo.
+* Biến cấu hình: Khai báo đường dẫn tệp log và báo cáo.
+* Thông báo: Dùng Write-Host hiển thị trạng thái.
+* Xử lý: Đọc log → Lọc lỗi 404 → Ghi nối tiếp vào báo cáo.
+2. Mã nguồn auto_report.ps1
+# Ten: auto_report.ps1
+# Tac gia: An
+# Ngay tao: 13/10/2026
+
+
+$log = ".\server.log"
+$report = ".\report.txt"
+
+
+Write-Host "Dang loc log..."
+
+
+Add-Content $report "`n=== HE THONG TU DONG LOC LOG ===" -Encoding utf8
+
+
+if (Test-Path $log) {
+    Get-Content $log |
+        Select-String "404" |
+        ForEach-Object { $_.Line } |
+        Add-Content $report -Encoding utf8
+
+
+    Write-Host "Da luu bao cao thanh cong!"
+}
+else {
+    Write-Host "Khong tim thay server.log!"
+}
+3. Cách chạy
+Đặt auto_report.ps1 và server.log trong cùng thư mục, sau đó chạy:
+.\auto_report.ps1
+Kết quả được ghi vào report.txt, gồm tiêu đề và các dòng chứa lỗi 404.
